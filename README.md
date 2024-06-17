@@ -1,17 +1,17 @@
 # Aplicatie_scraping_internet
 Ziua1:17/06/2024
-#Descriere Proiect
-Pentru a crea o aplicație care trimite notificări despre Euro 2024, am accesat două surse online și am obținut două chei API:
+Descriere Proiect
+Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online și am obținut doua chei API:
 
-#NewsAPI pentru știri despre Euro 2024
+NewsAPI pentru stiri despre Euro 2024
 
-Înregistrare: M-am înregistrat pe NewsAPI.
-Obținerea cheii API: Am generat o cheie API pentru a accesa știri relevante despre Euro 2024.
-Configurare cereri API: Am configurat cererile pentru a căuta știri în engleză și română.
+Inregistrare: M-am inregistrat pe NewsAPI.
+Obtinerea cheii API: Am generat o cheie API pentru a accesa stiri relevante despre Euro 2024.
+Configurare cereri API: Am configurat cererile pentru a cauta știri în engleza si romana.
 
-#Football-Data API pentru clasamentul Euro 2024
+Football-Data API pentru clasamentul Euro 2024
 
-Înregistrare: M-am înregistrat pe Football-Data API.
+Inregistrare: M-am inregistrat pe Football-Data API.
 Obținerea cheii API: Am primit o cheie API pentru a accesa datele despre clasament.
 Configurare cereri API: Am configurat cererile pentru a extrage clasamentul actualizat al competiției.
 Integrare
