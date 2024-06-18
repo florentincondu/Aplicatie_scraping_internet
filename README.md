@@ -24,4 +24,4 @@ Astfel, aplicația oferă utilizatorilor notificări atât despre știri, cât �
 
 Ziua2:18/06/2024
 Am rezolvat problemele de afisare a notificarilor si filtare ale acestora 
-Am modificat functia care tine de notificarea clasamentului prin notificarea cu modificarile aduse in in clasament
+Am modificat functia care tine de notificarea clasamentului prin notificarea cu modificarile aduse in clasament
