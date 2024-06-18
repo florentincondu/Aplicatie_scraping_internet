@@ -20,3 +20,8 @@ Am integrat cele două chei API în aplicația Python:
 Știri: Am folosit cheia API de la NewsAPI pentru a afișa notificări de tip pop-up pentru știri noi despre Euro 2024.
 Clasament: Am folosit cheia API de la Football-Data API pentru a trimite notificări cu actualizările de clasament.
 Astfel, aplicația oferă utilizatorilor notificări atât despre știri, cât și despre modificările din clasamentul Euro 2024.
+
+
+Ziua2:18/06/2024
+Am rezolvat problemele de afisare a notificarilor si filtare ale acestora 
+Am modificat functia care tine de notificarea clasamentului prin notificarea cu modificarile aduse in in clasament
