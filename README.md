@@ -2,7 +2,7 @@
 ## Ziua 1: 17/06/2024
 Descriere Proiect
 
-Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online si am obtinut doua chei API:
+-** Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online si am obtinut doua chei API:
 
 NewsAPI pentru stiri despre Euro 2024:
 
