@@ -53,7 +53,7 @@ def check_for_news():
 
             if title not in latest_news:
                 new_articles.append((title, url))
-                latest_news.append(title)  # Update latest_news list
+                latest_news.append(title)  
 
         if new_articles:
             with open(f'latest_news_{lang}.txt', 'w', encoding='utf-8') as f:
@@ -72,12 +72,12 @@ def check_for_standings():
         with open('latest_standings.json', 'r', encoding='utf-8') as f:
             latest_standings = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        latest_standings = {}  # Handle case where file is missing or corrupted
+        latest_standings = {}  
 
     current_standings = standings_data['standings'][0]['table']
 
     if current_standings != latest_standings:
-        # Compare current standings with latest_standings to find changes
+       
         changes_detected = find_standings_changes(latest_standings, current_standings)
 
         if changes_detected:
