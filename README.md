@@ -1,5 +1,5 @@
-#Aplicatie_scraping_internet
-Ziua 1: 17/06/2024
+# Aplicatie_scraping_internet
+## Ziua 1: 17/06/2024
 Descriere Proiect
 
 Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online si am obtinut doua chei API:
@@ -22,7 +22,7 @@ Stiri: Am folosit cheia API de la NewsAPI pentru a afisa notificari de tip pop-u
 Clasament: Am folosit cheia API de la Football-Data API pentru a trimite notificari cu actualizarile de clasament.
 Astfel, aplicatia ofera utilizatorilor notificari atat despre stiri, cat si despre modificarile din clasamentul Euro 2024.
 
-Ziua 2: 18/06/2024
+## Ziua 2: 18/06/2024
 Rezolvarea problemelor de afisare a notificarilor:
 
 Am identificat si corectat erorile care afectau afisarea corecta a notificarilor.
@@ -35,7 +35,7 @@ Modificarea functiei de notificare a clasamentului:
 
 Am revizuit functia responsabila de notificarea schimbarilor in clasament.
 Noua versiune a functiei notifica utilizatorii imediat ce apar modificari in clasament, oferind detalii clare si precise despre schimbarile recente.
-Ziua 3: 19/06/2024
+## Ziua 3: 19/06/2024
 Adaugarea unei functionalitati esentiale:
 
 Accesarea site-urilor cu stirile provenite din notificari:
