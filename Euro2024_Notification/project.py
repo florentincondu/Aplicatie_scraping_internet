@@ -4,6 +4,8 @@ from plyer import notification
 import time
 import json
 import webbrowser
+from win10toast_click import ToastNotifier
+
 
 FOOTBALL_API_KEY = '097ab494621643829a7d1f1cba4fa521'
 NEWS_API_KEY = '6368f55812f94137b2e82d45007560be'
@@ -11,20 +13,25 @@ NEWS_API_KEY = '6368f55812f94137b2e82d45007560be'
 NEWS_API_URL = 'https://newsapi.org/v2/everything'
 STANDINGS_URL = 'https://api.football-data.org/v2/competitions/EC/standings'
 
+toaster = ToastNotifier()
 
-def show_notification(title, message):
-    notification.notify(
-        title=title,
-        message=message,
-        app_name='Euro 2024 Notifier',
-        timeout=10,
-        app_icon=None
-    )
-
-
+def show_notification(title, message, url=None):
+    if url:
+        toaster.show_toast(
+            title,
+            message,
+            duration=10,
+            callback_on_click=lambda: open_url(url)
+        )
+    else:
+        notification.notify(
+            title=title,
+            message=message,
+            app_name='Euro 2024 Notifier',
+            timeout=10
+        )
 def open_url(url):
     webbrowser.open(url)
-
 
 def check_for_news():
     languages = ['en', 'ro']
@@ -60,8 +67,7 @@ def check_for_news():
                 f.write('\n'.join(latest_news))
 
     for title, url in new_articles:
-        show_notification('New Euro 2024 News!', title)
-
+        show_notification('New Euro 2024 News!', title, url)
 
 def check_for_standings():
     headers = {'X-Auth-Token': FOOTBALL_API_KEY}
@@ -72,12 +78,11 @@ def check_for_standings():
         with open('latest_standings.json', 'r', encoding='utf-8') as f:
             latest_standings = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        latest_standings = {}  # Handle case where file is missing or corrupted
+        latest_standings = {}
 
     current_standings = standings_data['standings'][0]['table']
 
     if current_standings != latest_standings:
-        # Compare current standings with latest_standings to find changes
         changes_detected = find_standings_changes(latest_standings, current_standings)
 
         if changes_detected:
@@ -91,7 +96,6 @@ def check_for_standings():
                 message += f"{position}. {team_name}\n"
 
             show_notification('Euro 2024 Standings Update', message)
-
 
 def find_standings_changes(old_standings, new_standings):
     changes = []
@@ -108,7 +112,6 @@ def find_standings_changes(old_standings, new_standings):
                 })
 
     return changes
-
 
 while True:
     try:
