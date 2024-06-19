@@ -1,5 +1,5 @@
 # Aplicatie_scraping_internet
-Ziua1:17/06/2024
+##Ziua1:17/06/2024
 Descriere Proiect
 Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online și am obținut doua chei API:
 
@@ -22,6 +22,24 @@ Clasament: Am folosit cheia API de la Football-Data API pentru a trimite notific
 Astfel, aplicația oferă utilizatorilor notificări atât despre știri, cât și despre modificările din clasamentul Euro 2024.
 
 
-Ziua2:18/06/2024
-Am rezolvat problemele de afisare a notificarilor si filtare ale acestora 
-Am modificat functia care tine de notificarea clasamentului prin notificarea cu modificarile aduse in clasament
+##Ziua 2: 18/06/2024
+Rezolvarea problemelor de afișare a notificărilor:
+
+Am identificat și corectat erorile care afectau afișarea corectă a notificărilor.
+Notificările sunt acum afișate consistent și fără întreruperi.
+Filtrarea notificărilor:
+
+Am implementat un sistem de filtrare care asigură că doar notificările relevante sunt afișate.
+Acum, utilizatorii primesc doar notificările care contează pentru ei, fără a fi bombardați cu informații inutile.
+Modificarea funcției de notificare a clasamentului:
+
+Am revizuit funcția responsabilă de notificarea schimbărilor în clasament.
+Noua versiune a funcției notifică utilizatorii imediat ce apar modificări în clasament, oferind detalii clare și precise despre schimbările recente.
+
+##Ziua 3: 19/06/2024
+Astăzi am adăugat o funcționalitate esențială în proiect:
+
+Accesarea site-urilor cu știrile provenite din notificări:
+Am integrat o nouă funcționalitate care permite utilizatorilor să acceseze direct site-urile cu știri relevante printr-un simplu clic pe notificări.
+Acum, fiecare notificare de știre include un link către articolul original, oferind utilizatorilor o modalitate rapidă și ușoară de a accesa informațiile complete.
+
