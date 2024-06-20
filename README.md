@@ -11,9 +11,10 @@ Obtinerea cheii API: Am generat o cheie API pentru a accesa stiri relevante desp
 Configurare cereri API: Am configurat cererile pentru a cauta stiri in engleza si romana.
 Football-Data API pentru clasamentul Euro 2024:
 
-Inregistrare: M-am inregistrat pe Football-Data API.
-Obtinerea cheii API: Am primit o cheie API pentru a accesa datele despre clasament.
-Configurare cereri API: Am configurat cererile pentru a extrage clasamentul actualizat al competitiei.
+Inregistrare:
+M-am inregistrat pe Football-Data API.
+  - Obtinerea cheii API: Am primit o cheie API pentru a accesa datele despre clasament.
+  - Configurare cereri API: Am configurat cererile pentru a extrage clasamentul actualizat al competitiei.
 
 Actualizare:
 Football-Data API pentru meciurile Euro 2024:
