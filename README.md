@@ -22,11 +22,6 @@ Football-Data API pentru meciurile Euro 2024:
   - Înregistrare: M-am înregistrat pe Football-Data API.
   - Obținerea cheii API: Am primit o cheie API pentru a accesa datele despre următoarele meciuri.
   - Configurare cereri API: Am configurat cererile pentru a extrage meciurile planificate, inclusiv gazda, oaspeții și ora de start a fiecărui meci.
-
-
-Integrare
-Am integrat cele doua chei API in aplicatia Python:
-
 Stiri:
   - Am folosit cheia API de la NewsAPI pentru a afisa notificari de tip pop-up pentru stiri noi despre Euro 2024.
   - Astfel, aplicatia ofera utilizatorilor notificari despre stirile competitiei Euro2024
