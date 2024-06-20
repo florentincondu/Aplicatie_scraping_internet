@@ -14,6 +14,14 @@ Football-Data API pentru clasamentul Euro 2024:
 Inregistrare: M-am inregistrat pe Football-Data API.
 Obtinerea cheii API: Am primit o cheie API pentru a accesa datele despre clasament.
 Configurare cereri API: Am configurat cererile pentru a extrage clasamentul actualizat al competitiei.
+
+Actualizare:
+Football-Data API pentru meciurile Euro 2024:
+  - Înregistrare: M-am înregistrat pe Football-Data API.
+  - Obținerea cheii API: Am primit o cheie API pentru a accesa datele despre următoarele meciuri.
+  - Configurare cereri API: Am configurat cererile pentru a extrage meciurile planificate, inclusiv gazda, oaspeții și ora de start a fiecărui meci.
+
+
 Integrare
 
 Am integrat cele doua chei API in aplicatia Python:
@@ -41,3 +49,11 @@ Adaugarea unei functionalitati esentiale:
 Accesarea site-urilor cu stirile provenite din notificari:
 Am integrat o noua functionalitate care permite utilizatorilor sa acceseze direct site-urile cu stiri relevante printr-un simplu clic pe notificari.
 Acum, fiecare notificare de stire include un link catre articolul original, oferind utilizatorilor o modalitate rapida si usoara de a accesa informatiile complete.
+
+Acest aspect a fost inclus in functia check_for_news().
+
+## Ziua 4: 20/06/2024
+
+Modificarea functiei de notificare in caz de apare o schimbare in clasament cu o functie de notificare in care anunta utilizatorul cu o ora inainte de inceperea unui meci.
+Astfel prin intermediul chei API furnizate de Football-Data API ,numai extrag date despre clasament ci despre urmatoarele meciuri . 
+Acest aspect a fost inclus in functia check_for_matches()
