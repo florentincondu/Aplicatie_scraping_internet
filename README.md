@@ -41,3 +41,10 @@ Adaugarea unei functionalitati esentiale:
 Accesarea site-urilor cu stirile provenite din notificari:
 Am integrat o noua functionalitate care permite utilizatorilor sa acceseze direct site-urile cu stiri relevante printr-un simplu clic pe notificari.
 Acum, fiecare notificare de stire include un link catre articolul original, oferind utilizatorilor o modalitate rapida si usoara de a accesa informatiile complete.
+
+Acest aspect a fost inclus in functia check_for_news().
+
+## Ziua 4: 20/06/2024
+
+Modificarea functiei de notificare in caz de apare o schimbare in clasament cu o functie de notificare in care anunta utilizatorul cu o ora inainte de inceperea unui meci.
+Acest aspect a fost inclus in functia check_for_matches()
