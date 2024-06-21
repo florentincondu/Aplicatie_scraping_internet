@@ -46,3 +46,7 @@ Acest aspect a fost inclus in functia check_for_news().
   - Modificarea functiei de notificare in caz de apare o schimbare in clasament cu o functie de notificare in care anunta utilizatorul cu o ora inainte de inceperea unui meci.
   - Astfel prin intermediul chei API furnizate de Football-Data API ,numai extrag date despre clasament ci despre urmatoarele meciuri . 
 Acest aspect a fost inclus in functia check_for_matches()
+
+## Ziua 5: 21/06/2023
+  - Implementarea unei interfete grafice pentru o gestionare mai usoara a aplicatiei si pentru adaugarede noi utilitati .
+  - Interfata grafica inca este in mod de testare si mai are nevoie de ajustari.
