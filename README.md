@@ -48,5 +48,5 @@ Acest aspect a fost inclus in functia check_for_news().
 Acest aspect a fost inclus in functia check_for_matches()
 
 ## Ziua 5: 21/06/2023
-  - Implementarea unei interfete grafice pentru o gestionare mai usoara a aplicatiei si pentru adaugarede noi utilitati .
+  - Implementarea unei interfete grafice pentru o gestionare mai usoara a aplicatiei si pentru adaugare de noi utilitati .
   - Interfata grafica inca este in mod de testare si mai are nevoie de ajustari.
