@@ -47,12 +47,12 @@ Acest aspect a fost inclus in functia check_for_news().
   - Astfel prin intermediul chei API furnizate de Football-Data API ,numai extrag date despre clasament ci despre urmatoarele meciuri . 
 Acest aspect a fost inclus in functia check_for_matches()
 
-## Ziua 5: 21/06/2023
+## Ziua 5: 21/06/2024
   - Implementarea unei interfete grafice pentru o gestionare mai usoara a aplicatiei si pentru adaugare de noi utilitati .
   - Interfata grafica inca este in mod de testare si mai are nevoie de ajustari.
 
 
-## Ziua 6: 25/06/2023  
+## Ziua 6: 25/06/2024  
 Actualizare informatii proiect:   
 Aceasta aplicatie ofera o interfata utilizator pentru accesarea stirilor Euro 2024 și a meciurilor de fotbal viitoare. Include functionalitati precum o bara de căutare pentru filtrarea articolelor de stiri si notificari pentru stiri si meciuri.  
 Caracteristici:
