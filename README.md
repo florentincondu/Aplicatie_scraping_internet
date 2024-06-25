@@ -54,7 +54,7 @@ Acest aspect a fost inclus in functia check_for_matches()
 
 ## Ziua 6: 25/06/2024  
 ### Actualizare informatii proiect:   
-#### Aceasta aplicatie ofera o interfata utilizator pentru accesarea stirilor Euro 2024 și a meciurilor de fotbal viitoare. Include functionalitati precum o bara de căutare pentru filtrarea articolelor de stiri si notificari pentru stiri si meciuri.  
+#### Aceasta aplicatie ofera o interfata utilizator pentru accesarea stirilor Euro 2024 și a meciurilor de fotbal viitoare. Include functionalitati precum o bara de cautare pentru filtrarea articolelor de stiri si notificari pentru stiri si meciuri.  
 #### Caracteristici:
   - Bara de Cautare: Permite utilizatorilor să caute articole de stiri specifice pe baza cuvintelor cheie.
   - Sectiune de Stiri: Afiseaza articolele de stiri recuperate legate de Euro 2024.
