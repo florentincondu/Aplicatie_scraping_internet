@@ -1,266 +1,264 @@
-import requests
-import json
-import webbrowser
-import threading
-import time
-from datetime import datetime
-from plyer import notification
-from win10toast_click import ToastNotifier
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
+import requests
 from PIL import Image, ImageTk
-import io
+from io import BytesIO
+from plyer import notification
+import threading
+from datetime import datetime, timedelta
 
 FOOTBALL_API_KEY = '097ab494621643829a7d1f1cba4fa521'
 NEWS_API_KEY = '6368f55812f94137b2e82d45007560be'
-
 NEWS_API_URL = 'https://newsapi.org/v2/everything'
 MATCHES_URL = 'https://api.football-data.org/v2/competitions/EC/matches'
 
-toaster = ToastNotifier()
 
-def show_notification(title, message, url=None):
-    if url:
-        toaster.show_toast(
-            title,
-            message,
-            duration=None,
-            callback_on_click=lambda: open_url(url)
+class Euro2024App:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Euro 2024 News and Fixtures")
+
+        self.news_frame = tk.Frame(root)
+        self.fixtures_window = None
+        self.matches = []
+
+        self.news_notification_enabled = tk.BooleanVar()
+        self.fixtures_notification_enabled = tk.BooleanVar()
+
+        self.create_main_page()
+        self.schedule_updates()
+
+    def create_main_page(self):
+        self.clear_frame(self.news_frame)
+
+        # Add News Section
+        self.news_canvas = tk.Canvas(self.news_frame, width=800, height=600)
+        self.news_scrollbar = tk.Scrollbar(self.news_frame, orient="vertical", command=self.news_canvas.yview)
+        self.news_scrollable_frame = tk.Frame(self.news_canvas)
+
+        self.news_scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.news_canvas.configure(
+                scrollregion=self.news_canvas.bbox("all")
+            )
         )
-    else:
-        notification.notify(
-            title=title,
-            message=message,
-            app_name='Euro 2024 Notifier',
-            timeout=None,
-        )
 
-def open_url(url):
-    webbrowser.open(url)
+        self.news_canvas.create_window((0, 0), window=self.news_scrollable_frame, anchor="nw")
+        self.news_canvas.configure(yscrollcommand=self.news_scrollbar.set)
 
-def load_stored_news(lang):
-    try:
-        with open(f'latest_news_{lang}.txt', 'r', encoding='utf-8') as f:
-            stored_news = f.read().splitlines()
-            return stored_news
-    except FileNotFoundError:
-        return []
+        self.news_canvas.pack(side="left", fill="both", expand=True)
+        self.news_scrollbar.pack(side="right", fill="y")
 
-def store_news(lang, news_list):
-    with open(f'latest_news_{lang}.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(news_list))
+        # Search bar
+        self.search_var = tk.StringVar()
+        self.search_bar = tk.Entry(self.news_frame, textvariable=self.search_var)
+        self.search_bar.pack(pady=10)
+        self.search_bar.bind('<KeyRelease>', self.search_news)
 
-def check_for_news():
-    languages = ['en', 'ro']
-    new_articles = []
+        # Buttons
+        self.button_frame = tk.Frame(self.news_frame)
+        self.button_frame.pack(pady=10)
 
-    for lang in languages:
-        params = {
-            'q': 'Euro 2024 football',
-            'language': lang,
-            'sortBy': 'publishedAt',
-            'apiKey': NEWS_API_KEY
-        }
+        self.notifications_checkbox = tk.Checkbutton(
+            self.button_frame, text="Enable News Notifications", variable=self.news_notification_enabled)
+        self.notifications_checkbox.pack(side="left", padx=5)
 
-        response = requests.get(NEWS_API_URL, params=params)
-        news_data = response.json()
+        self.fixtures_button = tk.Button(self.button_frame, text="Upcoming Fixtures", command=self.show_fixtures)
+        self.fixtures_button.pack(side="left", padx=5)
 
-        stored_news = load_stored_news(lang)
-        latest_news = []
+        self.news_frame.pack(fill="both", expand=True)
 
-        for article in news_data.get('articles', []):
-            title = article['title']
-            url = article['url']
-            image_url = article['urlToImage']
-            if title not in stored_news and title != "[Removed]":
-                new_articles.append((title, url, image_url))
-            latest_news.append(title)
+        threading.Thread(target=self.fetch_news).start()
 
-        store_news(lang, latest_news)
+    def clear_frame(self, frame):
+        for widget in frame.winfo_children():
+            widget.destroy()
 
-    new_articles.sort(key=lambda x: x[0], reverse=True)
-    return new_articles
-
-def check_for_matches():
-    headers = {'X-Auth-Token': FOOTBALL_API_KEY}
-    response = requests.get(MATCHES_URL, headers=headers)
-    matches_data = response.json()
-
-    today = datetime.now().date()
-    upcoming_matches = []
-
-    for match in matches_data['matches']:
-        match_time = datetime.fromisoformat(match['utcDate'].replace('Z', '+00:00'))
-        if match_time.date() >= today:
-            upcoming_matches.append({
-                'home_team': match['homeTeam']['name'],
-                'away_team': match['awayTeam']['name'],
-                'match_time': match_time,
-                'notified': False
-            })
-
-    return upcoming_matches
-
-def update_news():
-    news_listbox.delete(0, END)
-    all_articles = []
-
-    for lang in ['en', 'ro']:
-        stored_news = load_stored_news(lang)
-        for title in stored_news:
-            response = requests.get(NEWS_API_URL, params={
-                'qInTitle': title,
-                'apiKey': NEWS_API_KEY
-            })
+    def fetch_news(self):
+        try:
+            params = {
+                'q': 'Euro 2024',
+                'apiKey': NEWS_API_KEY,
+                'language': 'en',
+                'sortBy': 'publishedAt'
+            }
+            response = requests.get(NEWS_API_URL, params=params)
+            response.raise_for_status()
             news_data = response.json()
-            for article in news_data.get('articles', []):
-                all_articles.append((article['title'], article['url'], article['urlToImage']))
 
-    all_articles.sort(key=lambda x: x[0], reverse=True)
-    news_images.clear()
+            news = set()
+            articles = news_data.get('articles', [])
+            for article in articles:
+                if "Removed" in article.get('title', ''):
+                    continue
+                title = article.get('title')
+                link = article.get('url')
+                img_url = article.get('urlToImage')
+                news.add((title, link, img_url))
 
-    for title, url, image_url in all_articles:
-        news_images.append((title, url, image_url))
-        add_news_to_listbox(title, url, image_url)
+            self.update_news(list(news))
 
-def update_matches():
-    match_listbox.delete(0, END)
-    upcoming_matches = check_for_matches()
-    for match in upcoming_matches:
-        home_team = match['home_team']
-        away_team = match['away_team']
-        match_time = match['match_time'].strftime('%Y-%m-%d %H:%M:%S')
+        except requests.RequestException as e:
+            messagebox.showerror("Error", f"Failed to fetch news: {e}")
 
-        message = f'{home_team} vs {away_team} starts at {match_time}'
-        match_listbox.insert(END, message)
+    def update_news(self, news):
+        for widget in self.news_scrollable_frame.winfo_children():
+            widget.destroy()
 
-def add_news_to_listbox(title, url, image_url):
-    news_frame = Frame(news_listbox, bg='black')
-    news_frame.pack(fill=X, pady=5)
+        for title, link, img_url in news:
+            self.display_article(title, link, img_url)
 
-    try:
-        response = requests.get(image_url)
+        if self.news_notification_enabled.get() and news:
+            self.send_news_notification(news[0][0])
+
+    def display_article(self, title, link, img_url):
+        article_frame = tk.Frame(self.news_scrollable_frame, pady=10)
+
+        if img_url:
+            threading.Thread(target=self.load_image, args=(article_frame, img_url)).start()
+
+        text_frame = tk.Frame(article_frame)
+        text_frame.pack(side="left", padx=10)
+
+        title_label = tk.Label(text_frame, text=title, wraplength=600, justify="left")
+        title_label.pack(anchor="w")
+
+        link_label = tk.Label(text_frame, text=link, fg="blue", cursor="hand2")
+        link_label.pack(anchor="w")
+        link_label.bind("<Button-1>", lambda e: self.open_link(link))
+
+        article_frame.pack(fill="x", pady=10)
+
+    def load_image(self, frame, img_url):
+        response = requests.get(img_url)
         image_data = response.content
-        image = Image.open(io.BytesIO(image_data))
-        image = image.resize((100, 100), Image.ANTIALIAS)
+        image = Image.open(BytesIO(image_data))
+        image = image.resize((150, 150), Image.LANCZOS)
         photo = ImageTk.PhotoImage(image)
-        image_label = Label(news_frame, image=photo, bg='black')
-        image_label.image = photo
-        image_label.pack(side=LEFT)
-    except Exception as e:
-        print(f"Failed to load image for {title}: {e}")
-        image_label = Label(news_frame, text="No Image", bg='black', fg='white')
-        image_label.pack(side=LEFT)
 
-    title_label = Label(news_frame, text=title, fg='white', bg='black', cursor='hand2', wraplength=200, justify=LEFT)
-    title_label.pack(side=LEFT, fill=X, expand=True)
-    title_label.bind("<Button-1>", lambda e: open_url(url))
+        img_label = tk.Label(frame, image=photo)
+        img_label.image = photo
+        img_label.pack(side="left")
 
-def update_news_and_matches():
-    while True:
-        update_news()
-        if receive_match_notifications.get():
-            update_matches()
-        time.sleep(60)
+    def open_link(self, link):
+        import webbrowser
+        webbrowser.open(link)
 
-def search_news():
-    query = search_var.get().lower()
-    news_listbox.delete(0, END)
-    for title, url, image_url in news_images:
-        if query in title.lower():
-            add_news_to_listbox(title, url, image_url)
+    def search_news(self, event):
+        search_term = self.search_var.get().lower()
+        for article_frame in self.news_scrollable_frame.winfo_children():
+            for widget in article_frame.winfo_children():
+                if isinstance(widget, tk.Label) and search_term in widget.cget("text").lower():
+                    article_frame.pack(fill="x", pady=10)
+                    break
+            else:
+                article_frame.pack_forget()
 
-def reset_news():
-    news_listbox.delete(0, END)
-    for title, url, image_url in news_images:
-        add_news_to_listbox(title, url, image_url)
+    def send_news_notification(self, title):
+        notification.notify(
+            title="Euro 2024 News",
+            message=f"New article: {title}",
+            timeout=10
+        )
 
-def on_select_match(event):
-    selected_index = match_listbox.curselection()
-    if selected_index:
-        selected_match = match_listbox.get(selected_index)
-        if messagebox.askyesno("Notification", f"Would you like to be notified for this match?\n\n{selected_match}"):
-            for match in upcoming_matches:
-                if f"{match['home_team']} vs {match['away_team']} starts at {match['match_time'].strftime('%Y-%m-%d %H:%M:%S')}" == selected_match:
-                    match['notified'] = True
+    def show_fixtures(self):
+        self.fixtures_window = tk.Toplevel(self.root)
+        self.fixtures_window.title("Upcoming Fixtures")
+        self.create_fixtures_page()
 
-def show_upcoming_fixtures():
-    news_frame.pack_forget()
-    fixtures_frame.pack(fill=BOTH, expand=True)
-    update_matches()
+    def create_fixtures_page(self):
+        self.fixtures_frame = tk.Frame(self.fixtures_window)
 
-def show_news():
-    fixtures_frame.pack_forget()
-    news_frame.pack(fill=BOTH, expand=True)
+        self.fixtures_canvas = tk.Canvas(self.fixtures_frame, width=800, height=600)
+        self.fixtures_scrollbar = tk.Scrollbar(self.fixtures_frame, orient="vertical", command=self.fixtures_canvas.yview)
+        self.fixtures_scrollable_frame = tk.Frame(self.fixtures_canvas)
 
-# GUI setup
-root = Tk()
-root.title("Euro 2024 Notifier")
+        self.fixtures_scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.fixtures_canvas.configure(
+                scrollregion=self.fixtures_canvas.bbox("all")
+            )
+        )
 
-receive_news_notifications = BooleanVar(value=True)
-receive_match_notifications = BooleanVar(value=True)
+        self.fixtures_canvas.create_window((0, 0), window=self.fixtures_scrollable_frame, anchor="nw")
+        self.fixtures_canvas.configure(yscrollcommand=self.fixtures_scrollbar.set)
 
-control_frame = Frame(root, bg='black')
-control_frame.pack(side=TOP, fill=X)
+        self.fixtures_canvas.pack(side="left", fill="both", expand=True)
+        self.fixtures_scrollbar.pack(side="right", fill="y")
 
-news_notification_check = Checkbutton(control_frame, text="News Notifications", variable=receive_news_notifications, bg='black', fg='white')
-news_notification_check.pack(side=LEFT)
+        self.fixtures_frame.pack(fill="both", expand=True)
 
-match_notification_check = Checkbutton(control_frame, text="Match Notifications", variable=receive_match_notifications, bg='black', fg='white')
-match_notification_check.pack(side=LEFT)
+        self.notify_checkbox = tk.Checkbutton(
+            self.fixtures_frame, text="Enable Match Notifications", variable=self.fixtures_notification_enabled)
+        self.notify_checkbox.pack(side="bottom", pady=10)
 
-search_var = StringVar()
-search_entry = Entry(control_frame, textvariable=search_var)
-search_entry.pack(side=LEFT, fill=X, expand=True, padx=5)
+        threading.Thread(target=self.fetch_fixtures).start()
 
-search_button = Button(control_frame, text="Search", command=search_news, bg='black', fg='white')
-search_button.pack(side=LEFT)
+    def fetch_fixtures(self):
+        try:
+            headers = {'X-Auth-Token': FOOTBALL_API_KEY}
+            response = requests.get(MATCHES_URL, headers=headers)
+            response.raise_for_status()
+            matches_data = response.json()
 
-reset_button = Button(control_frame, text="Reset", command=reset_news, bg='black', fg='white')
-reset_button.pack(side=LEFT)
+            self.matches = []
+            for match in matches_data.get('matches', []):
+                match_date = datetime.strptime(match['utcDate'], "%Y-%m-%dT%H:%M:%SZ")
+                if match_date >= datetime.now():
+                    home_team = match['homeTeam']['name']
+                    away_team = match['awayTeam']['name']
+                    self.matches.append((home_team, away_team, match_date))
 
-fixtures_button = Button(control_frame, text="Upcoming Fixtures", command=show_upcoming_fixtures, bg='black', fg='white')
-fixtures_button.pack(side=LEFT)
+            self.update_fixtures(self.matches)
 
-news_frame = Frame(root, bg='black')
-news_frame.pack(side=LEFT, fill=BOTH, expand=True)
+        except requests.RequestException as e:
+            messagebox.showerror("Error", f"Failed to fetch fixtures: {e}")
 
-news_label = Label(news_frame, text="Latest News", font=("Helvetica", 16), bg='black', fg='white')
-news_label.pack()
+    def update_fixtures(self, matches):
+        for widget in self.fixtures_scrollable_frame.winfo_children():
+            widget.destroy()
 
-news_canvas = Canvas(news_frame, bg='black')
-news_canvas.pack(side=LEFT, fill=BOTH, expand=True)
+        for home_team, away_team, match_date in matches:
+            match_frame = tk.Frame(self.fixtures_scrollable_frame, pady=10)
 
-news_scrollbar = Scrollbar(news_frame, orient=VERTICAL, command=news_canvas.yview)
-news_scrollbar.pack(side=RIGHT, fill=Y)
+            match_label = tk.Label(match_frame, text=f"{home_team} vs {away_team} - {match_date}", wraplength=700, justify="left")
+            match_label.pack(anchor="w")
+            match_label.bind("<Button-1>", lambda e, ht=home_team, at=away_team, md=match_date: self.ask_for_match_notifications(ht, at, md))
 
-news_listbox = Listbox(news_canvas, bg='black', fg='white')
-news_listbox.pack(side=LEFT, fill=BOTH, expand=True)
+            match_frame.pack(fill="x", pady=10)
 
-news_canvas.create_window((0, 0), window=news_listbox, anchor="nw")
+        if self.fixtures_notification_enabled.get() and matches:
+            self.enable_match_notifications()
 
-def on_frame_configure(canvas):
-    canvas.configure(scrollregion=canvas.bbox("all"))
+    def ask_for_match_notifications(self, home_team, away_team, match_date):
+        result = messagebox.askyesno("Match Notification", f"Do you want to receive notifications for {home_team} vs {away_team} match?")
+        if result:
+            self.schedule_single_match_notification(home_team, away_team, match_date)
 
-news_listbox.bind("<Configure>", lambda event, canvas=news_canvas: on_frame_configure(canvas))
-news_canvas.configure(yscrollcommand=news_scrollbar.set)
+    def schedule_single_match_notification(self, home_team, away_team, match_date):
+        notification_time = match_date - timedelta(minutes=5)
+        if datetime.now() < notification_time:
+            threading.Timer((notification_time - datetime.now()).total_seconds(),
+                            self.send_match_notification,
+                            [home_team, away_team, match_date]).start()
 
-fixtures_frame = Frame(root, bg='black')
+    def enable_match_notifications(self):
+        for home_team, away_team, match_date in self.matches:
+            self.schedule_single_match_notification(home_team, away_team, match_date)
 
-fixtures_label = Label(fixtures_frame, text="Upcoming Matches", font=("Helvetica", 16), bg='black', fg='white')
-fixtures_label.pack()
+    def send_match_notification(self, home_team, away_team, match_date):
+        notification.notify(
+            title="Upcoming Match",
+            message=f"{home_team} vs {away_team} is starting at {match_date.strftime('%Y-%m-%d %H:%M:%S')}",
+            timeout=10
+        )
 
-match_listbox = Listbox(fixtures_frame, bg='black', fg='white')
-match_listbox.pack(fill=BOTH, expand=True)
-match_listbox.bind('<<ListboxSelect>>', on_select_match)
+    def schedule_updates(self):
+        self.root.after(60000, self.fetch_news)
+        self.root.after(60000, self.fetch_fixtures)
 
-back_button = Button(fixtures_frame, text="Back to News", command=show_news, bg='black', fg='white')
-back_button.pack()
 
-news_images = []
-upcoming_matches = check_for_matches()
-
-update_thread = threading.Thread(target=update_news_and_matches, daemon=True)
-update_thread.start()
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = Euro2024App(root)
+    root.mainloop()
