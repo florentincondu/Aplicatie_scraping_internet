@@ -75,7 +75,7 @@ Acest aspect a fost inclus in functia check_for_matches()
 #### API-uri Utilizate:
   - News API: Obtine articole de stiri legate de Euro 2024.
   - Football API: Obtine meciuri de fotbal viitoare pentru Euro 2024.  
-#### Cum să Utilizati:
+#### Cum sa Utilizati:
   - Clonează repozitia.
   - Instalează dependintele.
   - Rulează python euro2024_app.py pentru a porni aplicatia.  
