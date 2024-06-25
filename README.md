@@ -78,7 +78,7 @@ Acest aspect a fost inclus in functia check_for_matches()
 #### Cum sa Utilizati:
   - Clonează repozitia.
   - Instalează dependintele.
-  - Rulează python euro2024_app.py pentru a porni aplicatia.  
+  - Rulează python project.py pentru a porni aplicatia.  
 #### Navigheaza prin interfata:
   - Foloseste bara de cautare pentru a filtra articolele de stiri.
   - Click pe "Upcoming fixtures" pentru a vedea meciurile programate.
