@@ -1,4 +1,4 @@
-# Aplicatie_scraping_internet
+# Aplicatie_scraping_internet: Euro 2024 News and Fixtures
 ## Ziua 1: 17/06/2024
 Descriere Proiect
 
