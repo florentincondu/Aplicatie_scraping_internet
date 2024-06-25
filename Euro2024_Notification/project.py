@@ -31,7 +31,6 @@ class Euro2024App:
     def create_main_page(self):
         self.clear_frame(self.news_frame)
 
-        # Add News Section
         self.news_canvas = tk.Canvas(self.news_frame, width=800, height=600)
         self.news_scrollbar = tk.Scrollbar(self.news_frame, orient="vertical", command=self.news_canvas.yview)
         self.news_scrollable_frame = tk.Frame(self.news_canvas)
@@ -49,13 +48,11 @@ class Euro2024App:
         self.news_canvas.pack(side="left", fill="both", expand=True)
         self.news_scrollbar.pack(side="right", fill="y")
 
-        # Search bar
         self.search_var = tk.StringVar()
         self.search_bar = tk.Entry(self.news_frame, textvariable=self.search_var)
         self.search_bar.pack(pady=10)
         self.search_bar.bind('<KeyRelease>', self.search_news)
 
-        # Buttons
         self.button_frame = tk.Frame(self.news_frame)
         self.button_frame.pack(pady=10)
 
