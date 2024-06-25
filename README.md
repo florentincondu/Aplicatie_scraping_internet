@@ -1,5 +1,5 @@
 # Aplicatie_scraping_internet: Euro 2024 News and Fixtures
-## Ziua 1: 17/06/2024
+### Ziua 1: 17/06/2024
 Descriere Proiect
 
 Pentru a crea o aplicatie care trimite notificari despre Euro 2024, am accesat doua surse online si am obtinut doua chei API:  
