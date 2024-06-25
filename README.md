@@ -50,3 +50,45 @@ Acest aspect a fost inclus in functia check_for_matches()
 ## Ziua 5: 21/06/2023
   - Implementarea unei interfete grafice pentru o gestionare mai usoara a aplicatiei si pentru adaugare de noi utilitati .
   - Interfata grafica inca este in mod de testare si mai are nevoie de ajustari.
+
+
+## Ziua 6: 25/06/2023  
+Actualizare informatii proiect:   
+Aceasta aplicatie ofera o interfata utilizator pentru accesarea stirilor Euro 2024 și a meciurilor de fotbal viitoare. Include functionalitati precum o bara de căutare pentru filtrarea articolelor de stiri si notificari pentru stiri si meciuri.  
+Caracteristici:
+  - Bara de Cautare: Permite utilizatorilor să caute articole de stiri specifice pe baza cuvintelor cheie.
+  - Sectiune de Stiri: Afiseaza articolele de stiri recuperate legate de Euro 2024.
+  - Notificari pentru Stiri: Optiune pentru activarea notificarilor pentru articolele noi de stiri recuperate.
+  - Meciuri Viitoare: Afiseaza meciurile de fotbal programate pentru Euro 2024.
+  - Notificari pentru Meciuri: Optiune pentru activarea notificarilor pentru meciurile viitoare.  
+Componente:
+  - Pagina Principala: Afiseaza articole de stiri cu titluri, link-uri și imagini optionale.
+  - Pagina Meciuri: Arata meciurile de fotbal viitoare cu numele echipelor si datele meciurilor.
+  - Notificari: Foloseste biblioteca Plyer pentru a trimite notificari desktop pentru actualizari de stiri si meciuri.  
+Dependinte:
+  - Python 3
+  - tkinter (pentru GUI)
+  - requests (pentru efectuarea cererilor HTTP)
+  - Pillow (varianta PIL pentru manipularea imaginilor)
+  - Plyer (pentru notificari desktop)
+  - datetime (pentru operatii cu date si timp)  
+API-uri Utilizate:
+  - News API: Obtine articole de stiri legate de Euro 2024.
+  - Football API: Obtine meciuri de fotbal viitoare pentru Euro 2024.  
+Cum să Utilizati:
+  - Clonează repozitia.
+  - Instalează dependintele.
+  - Rulează python euro2024_app.py pentru a porni aplicatia.  
+Navigheaza prin interfata:
+  - Foloseste bara de cautare pentru a filtra articolele de stiri.
+  - Click pe "Upcoming fixtures" pentru a vedea meciurile programate.
+  - Activeaza casetele de bifare pentru notificări pentru stiri si meciuri.
+Pagina Principala:
+![Screenshot 2024-06-25 091348](https://github.com/florentincondu/Aplicatie_scraping_internet/assets/162702746/9a383c82-164c-42ca-9a82-b289f489102c)
+
+Pagina Upcoming fixtures:  
+![Screenshot 2024-06-25 091406](https://github.com/florentincondu/Aplicatie_scraping_internet/assets/162702746/764ab75d-27eb-4d16-90d7-5aa27eab3361)
+
+
+
+
