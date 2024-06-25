@@ -82,7 +82,7 @@ Cum să Utilizati:
 Navigheaza prin interfata:
   - Foloseste bara de cautare pentru a filtra articolele de stiri.
   - Click pe "Upcoming fixtures" pentru a vedea meciurile programate.
-  - Activeaza casetele de bifare pentru notificări pentru stiri si meciuri.
+  - Activeaza casetele de bifare pentru notificări pentru stiri si meciuri.  
 Pagina Principala:
 ![Screenshot 2024-06-25 091348](https://github.com/florentincondu/Aplicatie_scraping_internet/assets/162702746/9a383c82-164c-42ca-9a82-b289f489102c)
 
