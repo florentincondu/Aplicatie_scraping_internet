@@ -21,7 +21,7 @@ class Euro2024App:
         self.news_frame = tk.Frame(root)
         self.fixtures_window = None
         self.matches = []
-        self.all_news = []  # Store all news articles
+        self.all_news = []  
 
         self.news_notification_enabled = tk.BooleanVar()
         self.fixtures_notification_enabled = tk.BooleanVar()
