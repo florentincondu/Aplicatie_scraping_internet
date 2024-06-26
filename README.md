@@ -89,6 +89,23 @@ Acest aspect a fost inclus in functia check_for_matches()
 ## Pagina Upcoming fixtures:  
 ![Screenshot 2024-06-25 091406](https://github.com/florentincondu/Aplicatie_scraping_internet/assets/162702746/764ab75d-27eb-4d16-90d7-5aa27eab3361)
 
-
-
+## Ziua 7: 26/06/2024  
+### Actualizare:
+  - Functionalitatea barei de cautare a fost actualizata si acum functioneaza complet. Aceasta actualizare include imbunatatiri ale procesului de filtrare a stirilor, facandu-l mai eficient si mai usor de utilizat.
+### Structura Aplicatiei
+#### Clasa Principala a Aplicatiei: Euro2024App
+#### Functii Principale:
+  - create_main_page(): Initializeaza layout-ul paginii principale.
+  - fetch_news(): Recupereaza cele mai recente articole de stiri.
+  - update_news(news): Actualizeaza afisarea stirilor.
+  - search_news(event): Filtreaza articolele de stiri pe baza interogarii de cautare.
+  - show_fixtures(): Deschide o fereastra noua care afiseaza programarile viitoare.
+  - fetch_fixtures(): Recupereaza programarile viitoare ale meciurilor.
+  - update_fixtures(matches): Actualizeaza afisarea programarilor.
+  - schedule_updates(): Programeaza actualizari regulate pentru stiri si programari.
+### Utilizarea Barei de Cautare:
+  - Situata pe pagina principala, bara de cautare permite utilizatorilor sa filtreze articolele de stiri.
+#### Functionalitatea de Cautare:
+  - Eveniment Declansator: Bara de cautare asculta pentru eliberarile de taste (<KeyRelease>) pentru a declansa functia search_news.
+  - Logica de Filtrare: Functia search_news filtreaza prin self.all_news si actualizeaza afisarea pe baza termenului de cautare.
 
