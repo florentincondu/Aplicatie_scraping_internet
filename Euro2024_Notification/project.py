@@ -11,7 +11,7 @@ FOOTBALL_API_KEY = '097ab494621643829a7d1f1cba4fa521'
 NEWS_API_KEY = '6368f55812f94137b2e82d45007560be'
 NEWS_API_URL = 'https://newsapi.org/v2/everything'
 MATCHES_URL = 'https://api.football-data.org/v2/competitions/EC/matches'
-
+TEAM_URL = 'https://api.football-data.org/v2/teams/'
 
 class Euro2024App:
     def __init__(self, root):
@@ -21,7 +21,7 @@ class Euro2024App:
         self.news_frame = tk.Frame(root)
         self.fixtures_window = None
         self.matches = []
-        self.all_news = [] 
+        self.all_news = []  # Store all news articles
 
         self.news_notification_enabled = tk.BooleanVar()
         self.fixtures_notification_enabled = tk.BooleanVar()
@@ -208,7 +208,9 @@ class Euro2024App:
                 if match_date >= datetime.now():
                     home_team = match['homeTeam']['name']
                     away_team = match['awayTeam']['name']
-                    self.matches.append((home_team, away_team, match_date))
+                    home_team_id = match['homeTeam']['id']
+                    away_team_id = match['awayTeam']['id']
+                    self.matches.append((home_team, away_team, match_date, home_team_id, away_team_id))
 
             self.update_fixtures(self.matches)
 
@@ -219,17 +221,72 @@ class Euro2024App:
         for widget in self.fixtures_scrollable_frame.winfo_children():
             widget.destroy()
 
-        for home_team, away_team, match_date in matches:
+        for home_team, away_team, match_date, home_team_id, away_team_id in matches:
             match_frame = tk.Frame(self.fixtures_scrollable_frame, pady=10)
 
-            match_label = tk.Label(match_frame, text=f"{home_team} vs {away_team} - {match_date}", wraplength=700, justify="left")
-            match_label.pack(anchor="w")
-            match_label.bind("<Button-1>", lambda e, ht=home_team, at=away_team, md=match_date: self.ask_for_match_notifications(ht, at, md))
+            home_team_label = tk.Label(match_frame, text=home_team, fg="blue", cursor="hand2")
+            home_team_label.pack(side="left")
+            home_team_label.bind("<Button-1>", lambda e, team_id=home_team_id: self.show_team_info(team_id))
+
+            vs_label = tk.Label(match_frame, text=" vs ")
+            vs_label.pack(side="left")
+
+            away_team_label = tk.Label(match_frame, text=away_team, fg="blue", cursor="hand2")
+            away_team_label.pack(side="left")
+            away_team_label.bind("<Button-1>", lambda e, team_id=away_team_id: self.show_team_info(team_id))
+
+            match_date_label = tk.Label(match_frame, text=f" - {match_date.strftime('%Y-%m-%d %H:%M:%S')}")
+            match_date_label.pack(side="left")
 
             match_frame.pack(fill="x", pady=10)
 
         if self.fixtures_notification_enabled.get() and matches:
             self.enable_match_notifications()
+
+    def show_team_info(self, team_id):
+        team_info_window = tk.Toplevel(self.root)
+        team_info_window.title("Team Information")
+
+        team_info_frame = tk.Frame(team_info_window)
+        team_info_frame.pack(fill="both", expand=True)
+
+        threading.Thread(target=self.fetch_team_info, args=(team_id, team_info_frame)).start()
+
+    def fetch_team_info(self, team_id, frame):
+        try:
+            headers = {'X-Auth-Token': FOOTBALL_API_KEY}
+            response = requests.get(f"https://api.football-data.org/v2/teams/{team_id}", headers=headers)
+            response.raise_for_status()
+            team_data = response.json()
+
+            self.update_team_info(team_data, frame)
+
+        except requests.RequestException as e:
+            messagebox.showerror("Error", f"Failed to fetch team info: {e}")
+
+    def update_team_info(self, team_data, frame):
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        team_name = team_data.get('name')
+        squad = team_data.get('squad', [])
+        squad_value = team_data.get('squadMarketValue', 'N/A')
+
+        team_label = tk.Label(frame, text=f"Team: {team_name}", font=("Arial", 14))
+        team_label.pack(pady=5)
+
+        value_label = tk.Label(frame, text=f"Squad Value: {squad_value}", font=("Arial", 12))
+        value_label.pack(pady=5)
+
+        squad_label = tk.Label(frame, text="Squad:", font=("Arial", 12))
+        squad_label.pack(pady=5)
+
+        for player in squad:
+            player_name = player.get('name')
+            position = player.get('position')
+            shirt_number = player.get('shirtNumber') if 'shirtNumber' in player else 'N/A'
+            player_label = tk.Label(frame, text=f"{player_name} - {position} - #{shirt_number}")
+            player_label.pack(anchor="w")
 
     def ask_for_match_notifications(self, home_team, away_team, match_date):
         result = messagebox.askyesno("Match Notification", f"Do you want to receive notifications for {home_team} vs {away_team} match?")
