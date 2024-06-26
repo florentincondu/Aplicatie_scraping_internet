@@ -21,6 +21,7 @@ class Euro2024App:
         self.news_frame = tk.Frame(root)
         self.fixtures_window = None
         self.matches = []
+        self.all_news = []  # Store all news articles
 
         self.news_notification_enabled = tk.BooleanVar()
         self.fixtures_notification_enabled = tk.BooleanVar()
@@ -49,9 +50,13 @@ class Euro2024App:
         self.news_scrollbar.pack(side="right", fill="y")
 
         self.search_var = tk.StringVar()
-        self.search_bar = tk.Entry(self.news_frame, textvariable=self.search_var)
-        self.search_bar.pack(pady=10)
+        search_frame = tk.Frame(self.news_frame)
+        search_label = tk.Label(search_frame, text="Search")
+        search_label.pack(side="left", padx=5)
+        self.search_bar = tk.Entry(search_frame, textvariable=self.search_var)
+        self.search_bar.pack(side="left", pady=10)
         self.search_bar.bind('<KeyRelease>', self.search_news)
+        search_frame.pack(pady=10)
 
         self.button_frame = tk.Frame(self.news_frame)
         self.button_frame.pack(pady=10)
@@ -74,7 +79,7 @@ class Euro2024App:
     def fetch_news(self):
         try:
             params = {
-                'q': 'Euro 2024',
+                'q': 'Euro 2024 football',
                 'apiKey': NEWS_API_KEY,
                 'language': 'en',
                 'sortBy': 'publishedAt'
@@ -93,7 +98,8 @@ class Euro2024App:
                 img_url = article.get('urlToImage')
                 news.add((title, link, img_url))
 
-            self.update_news(list(news))
+            self.all_news = list(news)
+            self.update_news(self.all_news)
 
         except requests.RequestException as e:
             messagebox.showerror("Error", f"Failed to fetch news: {e}")
@@ -143,13 +149,11 @@ class Euro2024App:
 
     def search_news(self, event):
         search_term = self.search_var.get().lower()
-        for article_frame in self.news_scrollable_frame.winfo_children():
-            for widget in article_frame.winfo_children():
-                if isinstance(widget, tk.Label) and search_term in widget.cget("text").lower():
-                    article_frame.pack(fill="x", pady=10)
-                    break
-            else:
-                article_frame.pack_forget()
+        if search_term == "":
+            self.update_news(self.all_news)
+        else:
+            filtered_news = [article for article in self.all_news if search_term in article[0].lower()]
+            self.update_news(filtered_news)
 
     def send_news_notification(self, title):
         notification.notify(
