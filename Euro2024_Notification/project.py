@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 FOOTBALL_API_KEY = '097ab494621643829a7d1f1cba4fa521'
 NEWS_API_KEY = '6368f55812f94137b2e82d45007560be'
 NEWS_API_URL = 'https://newsapi.org/v2/everything'
-MATCHES_URL = 'https://api.football-data.org/v2/competitions/EC/matches'
-TEAM_URL = 'https://api.football-data.org/v2/teams/'
+MATCHES_URL = 'https://api.football-data.org/v4/competitions/EC/matches'
+TEAM_URL = 'https://api.football-data.org/v4/teams/'
 
 class Euro2024App:
     def __init__(self, root):
@@ -22,7 +22,7 @@ class Euro2024App:
         self.fixtures_window = None
         self.matches = []
         self.all_news = []
-        self.last_news_notification_time = datetime.min 
+        self.last_news_notification_time = datetime.min
 
         self.news_notification_enabled = tk.BooleanVar()
         self.fixtures_notification_enabled = tk.BooleanVar()
@@ -114,6 +114,7 @@ class Euro2024App:
             self.display_article(title, link, img_url)
 
         if self.news_notification_enabled.get() and news:
+            # Check if the latest news is new and notify
             latest_news_time = max([article[3] for article in news])
             if latest_news_time > self.last_news_notification_time:
                 self.send_news_notification(news[0][0])
@@ -248,26 +249,48 @@ class Euro2024App:
         if self.fixtures_notification_enabled.get() and matches:
             self.enable_match_notifications()
 
-    def show_team_info(self, team_id):
-        team_info_window = tk.Toplevel(self.root)
-        team_info_window.title("Team Information")
-
-        team_info_frame = tk.Frame(team_info_window)
-        team_info_frame.pack(fill="both", expand=True)
-
-        threading.Thread(target=self.fetch_team_info, args=(team_id, team_info_frame)).start()
-
-    def fetch_team_info(self, team_id, frame):
+    def get_team_id(self, team_name):
         try:
-            headers = {'X-Auth-Token': FOOTBALL_API_KEY}
-            response = requests.get(f"https://api.football-data.org/v2/teams/{team_id}", headers=headers)
+            response = requests.get(f"{TEAM_URL}", headers={'X-Auth-Token': FOOTBALL_API_KEY})
+            response.raise_for_status()
+            teams_data = response.json()
+            for team in teams_data['teams']:
+                if team['name'].lower() == team_name.lower():
+                    return team['id']
+            return None
+        except requests.RequestException as e:
+            messagebox.showerror("Error", f"Failed to fetch team ID: {e}")
+            return None
+
+    def get_team_details(self, team_id):
+        try:
+            response = requests.get(f"{TEAM_URL}{team_id}", headers={'X-Auth-Token': FOOTBALL_API_KEY})
             response.raise_for_status()
             team_data = response.json()
-
-            self.update_team_info(team_data, frame)
-
+            return team_data
         except requests.RequestException as e:
-            messagebox.showerror("Error", f"Failed to fetch team info: {e}")
+            messagebox.showerror("Error", f"Failed to fetch team details: {e}")
+            return None
+
+    def show_team_info(self, team_id):
+        team_data = self.get_team_details(team_id)
+        if team_data:
+            team_info_window = tk.Toplevel(self.root)
+            team_info_window.title("Team Information")
+
+            team_info_frame = tk.Frame(team_info_window)
+            team_info_frame.pack(fill="both", expand=True)
+
+            self.update_team_info(team_data, team_info_frame)
+        else:
+            messagebox.showerror("Error", "Failed to fetch team information.")
+
+    def fetch_team_info(self, team_id, frame):
+        team_data = self.get_team_details(team_id)
+        if team_data:
+            self.update_team_info(team_data, frame)
+        else:
+            messagebox.showerror("Error", "Failed to fetch team information.")
 
     def update_team_info(self, team_data, frame):
         for widget in frame.winfo_children():
@@ -320,7 +343,7 @@ class Euro2024App:
         self.root.after(60000, self.fetch_news)
         self.root.after(60000, self.fetch_fixtures)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  
     root = tk.Tk()
     app = Euro2024App(root)
     root.mainloop()
