@@ -21,7 +21,8 @@ class Euro2024App:
         self.news_frame = tk.Frame(root)
         self.fixtures_window = None
         self.matches = []
-        self.all_news = []  
+        self.all_news = []
+        self.last_news_notification_time = datetime.min 
 
         self.news_notification_enabled = tk.BooleanVar()
         self.fixtures_notification_enabled = tk.BooleanVar()
@@ -96,7 +97,8 @@ class Euro2024App:
                 title = article.get('title')
                 link = article.get('url')
                 img_url = article.get('urlToImage')
-                news.add((title, link, img_url))
+                published_at = datetime.strptime(article.get('publishedAt'), "%Y-%m-%dT%H:%M:%SZ")
+                news.add((title, link, img_url, published_at))
 
             self.all_news = list(news)
             self.update_news(self.all_news)
@@ -108,11 +110,14 @@ class Euro2024App:
         for widget in self.news_scrollable_frame.winfo_children():
             widget.destroy()
 
-        for title, link, img_url in news:
+        for title, link, img_url, published_at in news:
             self.display_article(title, link, img_url)
 
         if self.news_notification_enabled.get() and news:
-            self.send_news_notification(news[0][0])
+            latest_news_time = max([article[3] for article in news])
+            if latest_news_time > self.last_news_notification_time:
+                self.send_news_notification(news[0][0])
+                self.last_news_notification_time = latest_news_time
 
     def display_article(self, title, link, img_url):
         article_frame = tk.Frame(self.news_scrollable_frame, pady=10)
@@ -314,7 +319,6 @@ class Euro2024App:
     def schedule_updates(self):
         self.root.after(60000, self.fetch_news)
         self.root.after(60000, self.fetch_fixtures)
-
 
 if __name__ == "__main__":
     root = tk.Tk()
