@@ -109,3 +109,7 @@ Acest aspect a fost inclus in functia check_for_matches()
   - Eveniment Declansator: Bara de cautare asculta pentru eliberarile de taste (<KeyRelease>) pentru a declansa functia search_news.
   - Logica de Filtrare: Functia search_news filtreaza prin self.all_news si actualizeaza afisarea pe baza termenului de cautare.
 
+## Ziua 8: 27/06/2024
+  -  Am rezolvat problemele legate de notificarile despre stiri prin implementarea unui sistem de verificare a datei.
+  - Inainte de a trimite o notificare, aplicatia verifica daca data stirii este mai recenta decat ultima notificare trimisa.
+  - Astfel, utilizatorii primesc doar notificari relevante si actualizate, evitand redundanta si informatiile invechite.
