@@ -113,3 +113,5 @@ Acest aspect a fost inclus in functia check_for_matches()
   -  Am rezolvat problemele legate de notificarile despre stiri prin implementarea unui sistem de verificare a datei.
   - Inainte de a trimite o notificare, aplicatia verifica daca data stirii este mai recenta decat ultima notificare trimisa.
   - Astfel, utilizatorii primesc doar notificari relevante si actualizate, evitand redundanta si informatiile invechite.
+#### Noua functionalitate: 
+  - Am adaugat posibilitatea de a vedea detalii despre o echipa prin apasarea pe ea in lista de upcoming fixtures.
