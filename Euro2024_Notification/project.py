@@ -114,7 +114,6 @@ class Euro2024App:
             self.display_article(title, link, img_url)
 
         if self.news_notification_enabled.get() and news:
-            # Check if the latest news is new and notify
             latest_news_time = max([article[3] for article in news])
             if latest_news_time > self.last_news_notification_time:
                 self.send_news_notification(news[0][0])
